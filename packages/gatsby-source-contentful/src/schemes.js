@@ -4,6 +4,7 @@ const ImageFormatType = new GraphQLEnumType({
   name: `ContentfulImageFormat`,
   values: {
     NO_CHANGE: { value: `` },
+    AUTO: { value: `` },
     JPG: { value: `jpg` },
     PNG: { value: `png` },
     WEBP: { value: `webp` },
@@ -39,6 +40,13 @@ const ImageResizingBehavior = new GraphQLEnumType({
     },
   },
 })
+const ImagePlaceholderType = new GraphQLEnumType({
+  name: `ContentfulImagePlaceholder`,
+  values: {
+    BLURRED: { value: `blurred` },
+    NONE: { value: `none` },
+  },
+})
 
 const ImageCropFocusType = new GraphQLEnumType({
   name: `ContentfulImageCropFocus`,
@@ -57,8 +65,19 @@ const ImageCropFocusType = new GraphQLEnumType({
   },
 })
 
+export const ImageLayoutType = new GraphQLEnumType({
+  name: `ContentfulImageLayout`,
+  values: {
+    FIXED: { value: `fixed` },
+    FLUID: { value: `fluid` },
+    CONSTRAINED: { value: `constrained` },
+  },
+})
+
 module.exports = {
   ImageFormatType,
+  ImageLayoutType,
   ImageResizingBehavior,
   ImageCropFocusType,
+  ImagePlaceholderType,
 }
