@@ -1,7 +1,10 @@
 const fs = require(`fs`)
 const path = require(`path`)
 const crypto = require(`crypto`)
-const { generateImageData } = require(`gatsby-plugin-image`)
+const {
+  generateImageData,
+  getGatsbyImageFieldConfig,
+} = require(`gatsby-plugin-image`)
 
 const Promise = require(`bluebird`)
 const {
@@ -11,8 +14,6 @@ const {
   GraphQLInt,
   GraphQLFloat,
   GraphQLNonNull,
-  GraphQLJSON,
-  GraphQLList,
 } = require(`gatsby/graphql`)
 const qs = require(`qs`)
 const base64Img = require(`base64-img`)
@@ -45,8 +46,6 @@ const {
   ImageFormatType,
   ImageResizingBehavior,
   ImageCropFocusType,
-  ImagePlaceholderType,
-  ImageLayoutType,
 } = require(`./schemes`)
 
 // @see https://www.contentful.com/developers/docs/references/images-api/#/reference/resizing-&-cropping/specify-width-&-height
@@ -176,7 +175,7 @@ const resolveGatsbyImageData = async (
         })
       : undefined
 
-  generateImageData({
+  return generateImageData({
     ...options,
     pluginName: `gatsby-source-contentful`,
     sourceMetadata,
@@ -531,55 +530,6 @@ const fixedNodeType = ({ name, getTracedSVG }) => {
   }
 }
 
-const gatsbyImageDataType = () => {
-  return {
-    name: `ContentfulImageData`,
-    type: new GraphQLNonNull(GraphQLJSON),
-    args: {
-      layout: {
-        type: ImageLayoutType,
-        defaultValue: `fixed`,
-      },
-      width: {
-        type: GraphQLInt,
-      },
-      height: {
-        type: GraphQLInt,
-      },
-      maxWidth: {
-        type: GraphQLInt,
-      },
-      maxHeight: {
-        type: GraphQLInt,
-      },
-      quality: {
-        type: GraphQLInt,
-      },
-      formats: {
-        type: GraphQLList(ImageFormatType),
-        defaultValue: [`auto`, `webp`],
-      },
-      resizingBehavior: {
-        type: ImageResizingBehavior,
-      },
-      cropFocus: {
-        type: ImageCropFocusType,
-      },
-      background: {
-        type: GraphQLString,
-      },
-      sizes: {
-        type: GraphQLString,
-      },
-      placeholder: {
-        type: ImagePlaceholderType,
-        defaultValue: `blurred`,
-      },
-    },
-    resolve: resolveGatsbyImageData,
-  }
-}
-
 const fluidNodeType = ({ name, getTracedSVG }) => {
   return {
     type: new GraphQLObjectType({
@@ -721,7 +671,18 @@ exports.extendNodeType = ({ type, store, cache, getNodesByType }) => {
 
   const fluidNode = fluidNodeType({ name: `ContentfulFluid`, getTracedSVG })
   const sizesNode = fluidNodeType({ name: `ContentfulSizes`, getTracedSVG })
-  const gatsbyImageData = gatsbyImageDataType()
+  const gatsbyImageData = getGatsbyImageFieldConfig(resolveGatsbyImageData, {
+    jpegProgressive: {
+      type: GraphQLBoolean,
+      defaultValue: true,
+    },
+    resizingBehavior: {
+      type: ImageResizingBehavior,
+    },
+    cropFocus: {
+      type: ImageCropFocusType,
+    },
+  })
   sizesNode.deprecationReason = `Sizes was deprecated in Gatsby v2. It's been renamed to "fluid" https://example.com/write-docs-and-fix-this-example-link`
 
   return {
