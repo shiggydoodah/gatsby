@@ -151,45 +151,23 @@ const fitMap = new Map([
   [`thumb`, `cover`],
 ])
 
-const resolveGatsbyImageData = async (
-  image,
-  {
-    resizingBehavior,
-    jpegProgressive,
-    quality,
-    cropFocus,
-    background,
-    ...options
-  }
-) => {
-  if (!generateImageData) {
-    throw new Error(`Please upgrade gatsby-plugin-image`)
-  }
-
+const resolveGatsbyImageData = async (image, options) => {
   const { baseUrl, ...sourceMetadata } = getBasicImageProps(image, options)
-
-  const placeholderURL =
-    options.placeholder === `blurred`
-      ? await getBase64Image({
-          baseUrl,
-        })
-      : undefined
 
   return generateImageData({
     ...options,
     pluginName: `gatsby-source-contentful`,
     sourceMetadata,
     filename: baseUrl,
-    placeholderURL,
+    placeholderURL:
+      options.placeholder === `blurred`
+        ? await getBase64Image({
+            baseUrl,
+          })
+        : undefined,
     generateImageSource,
-    fit: fitMap.get(resizingBehavior),
-    options: {
-      resizingBehavior,
-      jpegProgressive,
-      quality,
-      cropFocus,
-      background,
-    },
+    fit: fitMap.get(options.resizingBehavior),
+    options,
   })
 }
 
