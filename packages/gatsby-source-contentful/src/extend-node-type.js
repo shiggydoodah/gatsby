@@ -682,6 +682,10 @@ exports.extendNodeType = ({ type, store, cache, getNodesByType }) => {
     cropFocus: {
       type: ImageCropFocusType,
     },
+    quality: {
+      type: GraphQLInt,
+      defaultValue: 50,
+    },
   })
   sizesNode.deprecationReason = `Sizes was deprecated in Gatsby v2. It's been renamed to "fluid" https://example.com/write-docs-and-fix-this-example-link`
 
