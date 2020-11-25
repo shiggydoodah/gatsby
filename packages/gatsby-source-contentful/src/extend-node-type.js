@@ -1,10 +1,8 @@
 const fs = require(`fs`)
 const path = require(`path`)
 const crypto = require(`crypto`)
-const {
-  generateImageData,
-  getGatsbyImageFieldConfig,
-} = require(`gatsby-plugin-image`)
+const { generateImageData } = require(`gatsby-plugin-image`)
+const { getGatsbyImageFieldConfig } = require(`gatsby-plugin-image/graphql`)
 
 const Promise = require(`bluebird`)
 const {
