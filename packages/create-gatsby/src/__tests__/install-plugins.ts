@@ -15,10 +15,6 @@ jest.mock(
 )
 
 describe(`install-plugins`, () => {
-  beforeEach(() => {
-    console.warn = jest.fn()
-  })
-
   afterEach(() => {
     jest.resetAllMocks()
   })
