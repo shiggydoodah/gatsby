@@ -60,12 +60,9 @@ export async function installPlugins(
   rootPath: string,
   packages: Array<string>
 ): Promise<void> {
-  let installPluginCommand
-  let gatsbyPath
-
   try {
-    gatsbyPath = resolveGatsbyPath(rootPath)
-    installPluginCommand = resolveGatsbyCliPath(rootPath, gatsbyPath)
+    const gatsbyPath = resolveGatsbyPath(rootPath)
+    const installPluginCommand = resolveGatsbyCliPath(rootPath, gatsbyPath)
 
     await addPluginsToProject(
       installPluginCommand,
