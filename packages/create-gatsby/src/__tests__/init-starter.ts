@@ -134,7 +134,7 @@ describe(`init-starter`, () => {
       )
     })
 
-    it.only(`gently informs the user that yarn is not available when trying to use it`, async () => {
+    it(`gently informs the user that yarn is not available when trying to use it`, async () => {
       process.env.npm_config_user_agent = `yarn`
       ;(execSync as any).mockImplementation(() => {
         throw new Error(`Something wrong occured when trying to use yarn`)
@@ -152,14 +152,6 @@ describe(`init-starter`, () => {
       expect(reporter.info).toBeCalledWith(
         `Woops! Yarn doesn't seem be installed on your machine. You can install it on https://yarnpkg.com/getting-started/install. As a fallback, we will run the next steps with npm.`
       )
-      expect(reporter.success).toBeCalledWith(`Installed packages`)
-      expect(reporter.panic).not.toBeCalled()
-      expect(execa).toBeCalledWith(`npm`, [`install`, `--silent`])
-      expect(execa).toBeCalledWith(`npm`, [
-        `install`,
-        `--silent`,
-        `one-package`,
-      ])
     })
   })
 })
