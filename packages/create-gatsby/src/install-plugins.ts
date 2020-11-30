@@ -3,28 +3,6 @@ import path from "path"
 import { PluginConfigMap } from "."
 import { requireResolve } from "./require-utils"
 
-class GatsbyNotFound extends Error {
-  constructor(rootPath: string) {
-    super(
-      `Could not find "gatsby" in ${rootPath}. Perhaps it wasn't installed properly?`
-    )
-  }
-}
-
-class GatsbyCliNotFound extends Error {
-  constructor() {
-    super(`gatsby-cli not installed, or is too old`)
-  }
-}
-
-class AddPluginsError extends Error {
-  constructor(message: string) {
-    super(
-      `Something went wrong when trying to add the plugins to the project: ${message}`
-    )
-  }
-}
-
 const resolveGatsbyPath = (rootPath: string): string | never => {
   try {
     const gatsbyPath = requireResolve(`gatsby/package.json`, {
@@ -35,7 +13,9 @@ const resolveGatsbyPath = (rootPath: string): string | never => {
 
     return gatsbyPath
   } catch (e) {
-    throw new GatsbyNotFound(rootPath)
+    throw new Error(
+      `Could not find "gatsby" in ${rootPath}. Perhaps it wasn't installed properly?`
+    )
   }
 }
 
@@ -53,7 +33,7 @@ const resolveGatsbyCliPath = (
 
     return installPluginCommand
   } catch (e) {
-    throw new GatsbyCliNotFound()
+    throw new Error(`gatsby-cli not installed, or is too old`)
   }
 }
 
@@ -68,7 +48,9 @@ const addPluginsToProject = async (
     const { addPlugins } = require(installPluginCommand)
     await addPlugins(plugins, pluginOptions, rootPath, packages)
   } catch (e) {
-    throw new AddPluginsError(e.message)
+    throw new Error(
+      `Something went wrong when trying to add the plugins to the project: ${e.message}`
+    )
   }
 }
 

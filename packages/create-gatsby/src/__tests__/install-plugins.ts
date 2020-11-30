@@ -66,7 +66,7 @@ describe(`install-plugins`, () => {
     )
   })
 
-  it(`throws an error when add plugins fails somehow`, async () => {
+  it(`reports an error when add plugins fails somehow`, async () => {
     ;(requireResolve as any).mockImplementation(
       () => `somewhere-virtually-existing`
     )
